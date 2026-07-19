@@ -14,7 +14,7 @@ def build():
     
     output = Adw.PreferencesGroup(title="Çıkış")
 
-    device_combo = Adw.ComboRow(title="Çıkış Aygıtı")
+    device_combo = Adw.ComboRow(title="Çıkış Aygıtı")  #expander row denicem
     device_combo.set_model(Gtk.StringList.new([sink["name"] for sink in sinks]))
     default_index = 0
     for index, sink in enumerate(sinks):

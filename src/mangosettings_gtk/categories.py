@@ -24,7 +24,3 @@ category_list = [ #id(ingilizce/türkçe olması için) / isim / ikon
         ("about", "Hakkında", "info-outline-symbolic")
     ])
 ]
-
-
-
-default_id = "general"

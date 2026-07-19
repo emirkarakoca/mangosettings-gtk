@@ -9,7 +9,7 @@ class MangoWindow(Adw.ApplicationWindow):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.set_title("Mango Settings")
-        self.set_default_size(900,750)
+        self.set_default_size(1600,900)
         #self.set_size_request() #en düşük galiba
 
         self.page_cache = {}
