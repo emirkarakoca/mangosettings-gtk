@@ -35,12 +35,66 @@ class InfoService():
                     return line.split(":")[1].strip()
             return "Bilinmeyen"
 
-    def get_gpu(self):
+    def _load_pci_ids(self): #nasıl çalıştığını dahi bilmiyorum claude baba yaptı
+        paths = ["/usr/share/misc/pci.ids", "/usr/share/hwdata/pci.ids", "/usr/share/pci.ids"]
+        pci_ids_path = next((p for p in paths if os.path.exists(p)), None)
+        if not pci_ids_path:
+            return {}
+        vendors = {}
+        current_vendor = None
+        try:
+            with open(pci_ids_path, encoding="utf-8", errors="ignore") as f:
+                for line in f:
+                    if line.startswith("#") or not line.strip():
+                        continue
+                    if line.startswith("\t\t"):
+                        continue
+                    if line.startswith("\t"):
+                        if current_vendor is None:
+                            continue
+                        parts = line.strip().split(None, 1)
+                        if len(parts) == 2:
+                            dev_id, dev_name = parts
+                            vendors[current_vendor][1][dev_id.lower()] = dev_name.strip()
+                        continue
+                    if line[0] == "C":
+                        break
+                    parts = line.strip().split(None, 1)
+                    if len(parts) == 2:
+                        vendor_id, vendor_name = parts
+                        current_vendor = vendor_id.lower()
+                        vendors[current_vendor] = (vendor_name.strip(), {})
+        except Exception:
+            return {}
+        return vendors
+
+    def get_gpu(self): #aynı şekilde
+        pci_ids = self._load_pci_ids()
         gpus = []
-        for path in glob.glob("/sys/class/drm/card*/device/vendor"):
-            with open(path) as f:
-                vendor = f.read().strip()
-            gpus.append(vendor)
+        for dev_path in glob.glob("/sys/bus/pci/devices/*/"):
+            class_file = os.path.join(dev_path, "class")
+            if not os.path.exists(class_file):
+                continue
+            with open(class_file) as f:
+                pci_class = f.read().strip()
+            if pci_class in ("0x030000", "0x030200", "0x038000"):
+                with open(os.path.join(dev_path, "vendor")) as f:
+                    vendor_id = f.read().strip().replace("0x", "").lower()
+                with open(os.path.join(dev_path, "device")) as f:
+                    device_id = f.read().strip().replace("0x", "").lower()
+
+                vendor_name = "Bilinmeyen"
+                device_name = "Bilinmeyen"
+                if vendor_id in pci_ids:
+                    vendor_name, devices = pci_ids[vendor_id]
+                    device_name = devices.get(device_id, "Bilinmeyen")
+                gpus.append({
+                    "vendor_id": vendor_id,
+                    "device_id": device_id,
+                    "vendor": vendor_name,
+                    "device": device_name,
+                    "name": f"{vendor_name} {device_name}"
+                })
         return gpus
 
     def get_memory(self):

@@ -3,19 +3,12 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Gtk, Adw
 from ..services.info_service import InfoService
-import time
 def build():
     info = InfoService()
-    
-    start = time.time()
     mem_info = info.get_memory()
-    print("MEM:", time.time() - start)
-    start = time.time()    
     disk_info = info.get_disk()
-    print("DISK:", time.time() - start)
-    start = time.time()
-    gpu_info = info.get_gpu() #sorunlu
-    print("GPU:", time.time() - start)
+    gpu_info = info.get_gpu()
+
     page = Adw.PreferencesPage(title="Hakkında") #,,
 
     device = Adw.PreferencesGroup(title="Cihaz")
@@ -30,7 +23,8 @@ def build():
     hardware = Adw.PreferencesGroup(title="Donanım")
     cpu = Adw.ActionRow(title="İşlemci",subtitle=info.get_cpu())
     hardware.add(cpu)
-    gpu = Adw.ActionRow(title="GPU",subtitle="\n".join(gpu_info) if gpu_info else "Bilinmeyen")
+    gpu = Adw.ActionRow(title="GPU",
+        subtitle="\n".join(g["name"] for g in gpu_info) if gpu_info else "Bilinmeyen")
     hardware.add(gpu)
     memory = Adw.ActionRow(title="Bellek",subtitle=f"{mem_info["used"]}/{mem_info["total"]}")
     hardware.add(memory)
