@@ -2,12 +2,16 @@ import gi
 gi.require_version("Gtk","4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Gtk, Adw
-from . import categories
+from .ui.sidebar import Sidebar
 from .pages.pages import build_page
+from .config.manager import ConfigManager
+
 
 class MangoWindow(Adw.ApplicationWindow):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.config = ConfigManager()
+
         self.set_title("Mango Settings")
         self.set_default_size(1600,900)
         #self.set_size_request() #en düşük galiba
@@ -17,33 +21,16 @@ class MangoWindow(Adw.ApplicationWindow):
         self.split = Adw.NavigationSplitView(min_sidebar_width=200, max_sidebar_width=300)
         self.set_content(self.split)
 
-        self.build_sidebar()
+
+        self.sidebar = Sidebar(on_page_selected=self.show_page)
+        self.split.set_sidebar(self.sidebar.sidebar_page)
+        #self.build_sidebar()
         self.build_content()
         #self.build_breakpoint() #denicem
 
         self.show_page("general")
 
-    def build_sidebar(self):
-        self.sidebar = Adw.Sidebar()
-        self.sidebar.connect("activated", self.on_sidebar_activated)
-        for section_title, items in categories.category_list:
-            section = Adw.SidebarSection(title=section_title)
-            for page_id, title, icon in items:
-                item = Adw.SidebarItem(title=title, icon_name=icon)
-                item.page_id = page_id
-                section.append(item)
-            self.sidebar.append(section)
 
-        #search buraya
-        
-        toolbarview = Adw.ToolbarView()
-        header = Adw.HeaderBar()
-        header.set_title_widget(Adw.WindowTitle(title="Mango Ayarları"))  
-        toolbarview.add_top_bar(header)
-        toolbarview.set_content(self.sidebar)       
-        
-        self.sidebar_page = Adw.NavigationPage(title="Mango Ayarları", child=toolbarview)
-        self.split.set_sidebar(self.sidebar_page)
 
     def build_content(self):
         self.stack = Adw.ViewStack()

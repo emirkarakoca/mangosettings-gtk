@@ -1,14 +1,14 @@
 from pathlib import Path
 import shutil
 
-multi_keys = ["exec-once", "exec", "bind", "mousebind", "axisbind",
+MULTI_KEYS = {"exec-once", "exec", "bind", "mousebind", "axisbind",
     "layerrule", "tagrule", "monitorrule", "env", 
-    "source", "source-optional"]
+    "source", "source-optional"}
 
 class ConfigManager():
     def __init__(self):
         self.conf = Path.home() / ".config" / "mango" / "config.conf"
-        self.default = Path.home() / "Projeler" / "mangosettings-gtk" / "data" / "config.conf"
+        self.default = Path(__file__).parent.parent.parent / "data" / "config.conf"
         self.settings = {}
         self.value_line_index = {}
         self.lines = []
@@ -33,7 +33,7 @@ class ConfigManager():
                     continue
                 key, _, value = line.partition("=")
                 key = key.strip()
-                if key in multi_keys:
+                if key in MULTI_KEYS:
                     continue
                 value = value.strip()
                 if "#" in value:
@@ -50,6 +50,12 @@ class ConfigManager():
             return default
         return b.strip().lower() in ("1", "true", "yes")
 
+    def get_int(self, key, default):
+        try:
+            return int(self.settings.get(key, default))
+        except (TypeError, ValueError):
+            return default
+
     def get_float(self, key, default):
         try:
             return float(self.settings.get(key, default))
@@ -57,7 +63,13 @@ class ConfigManager():
             return default
         
     def set(self, key, value):
-        value = "1" if value is True else "0" if value is False else str(value)
+        if isinstance(value, bool):
+            value = "1" if value else "0"
+        elif isinstance(value, float):
+            value = f"{value:.6f}".rstrip("0").rstrip(".")
+        else:
+            value = str(value)
+            
         self.settings[key] = value
         if key in self.value_line_index:
             index = self.value_line_index[key]
@@ -72,6 +84,7 @@ class ConfigManager():
         else:
             self.lines.append(f"{key}={value}") #tekrarlanabilirler için
             self.value_line_index[key] = len(self.lines) - 1
+        self.save()
 
     def save(self):
         backup = self.conf.with_suffix(self.conf.suffix + ".bak")

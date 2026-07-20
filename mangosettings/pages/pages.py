@@ -1,6 +1,6 @@
 import gi
 from gi.repository import Adw
-from . import general, sound, wallpaper, about
+from . import general, sound, appearance, wallpaper, about
 
 builders = {
     "general": general.build,
@@ -12,7 +12,7 @@ builders = {
     #"keyboard": keyboard.build,
     #"shortcuts": shortcuts.build,
     #"mouse": mouse.build,
-    #"appearance": appearance.build,
+    "appearance": appearance.build,
     #"animations": animations.build,
     "wallpaper": wallpaper.build,
     "about": about.build
