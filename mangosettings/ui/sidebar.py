@@ -2,7 +2,7 @@ import gi
 gi.require_version("Gtk","4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Gtk, Adw
-from .. import categories
+from .. import registry
 
 class Sidebar:
     def __init__(self, on_page_selected=None):
@@ -13,7 +13,9 @@ class Sidebar:
     def build_sidebar(self):
         self.sidebar = Adw.Sidebar()
         self.sidebar.connect("activated", self.on_sidebar_activated)
-        for section_title, items in categories.category_list:
+        
+        
+        for section_title, items in registry.get_categories():
             section = Adw.SidebarSection(title=section_title)
             for page_id, title, icon in items:
                 item = Adw.SidebarItem(title=title, icon_name=icon)
@@ -28,7 +30,7 @@ class Sidebar:
         
         self.search_button = Gtk.ToggleButton(icon_name="system-search-symbolic")
         self.search_button.connect("toggled", self.on_toggle_search)
-        header.pack_end(self.search_button)
+        header.pack_start(self.search_button)
 
         self.revealer = Gtk.Revealer()
         self.revealer.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)

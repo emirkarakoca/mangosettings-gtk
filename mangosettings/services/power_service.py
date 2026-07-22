@@ -11,9 +11,18 @@ class PowerService():
             self.ppd = None
 
     def get_capacity(self):
-        return int(Path("/sys/class/power_supply/BAT0/capacity").read_text().strip())
-
+        try:
+            batteries = Path("/sys/class/power_supply").glob("BAT*/capacity")
+            for battery in batteries:
+                return int(battery.read_text().strip())
+        except:
+            return None
+        return None
+        
     def get_power_profile(self):
         if not self.ppd:
             return None
-        return self.ppd.get_cached_property("ActiveProfile").unpack()
+        profile = self.ppd.get_cached_property("ActiveProfile")
+        if profile is None:
+            return None
+        return profile.unpack()

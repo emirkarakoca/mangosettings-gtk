@@ -7,11 +7,10 @@ from .config.manager import ConfigManager
 class MangoSettings(Gtk.Application):
     def __init__(self):
         super().__init__(application_id="com.mango.settings") #id değişecek
-    
+        self.manager = ConfigManager()
     def do_activate(self):
-        config = ConfigManager()
-        extra_files = config.find_extra_files()
-        window = MangoWindow(application=self)
+        extra_files = self.manager.find_extra_files()
+        window = MangoWindow(application=self,manager=self.manager)
         window.present()
         
         if extra_files:

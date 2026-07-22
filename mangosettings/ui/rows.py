@@ -100,10 +100,12 @@ def create_text(item, manager):
 
     current = manager.get(item["key"], item["default"])
     entry.set_text(str(current))
-
-    def changed(entry):
+    def save():
         manager.set(item["key"], entry.get_text())
-    entry.connect("changed", changed)
+    entry.connect("activate", lambda _: save())
+    focus = Gtk.EventControllerFocus()
+    focus.connect("leave", lambda _: save())
+    entry.add_controller(focus)
     row.add_suffix(entry)
     row.set_activatable_widget(entry)
 

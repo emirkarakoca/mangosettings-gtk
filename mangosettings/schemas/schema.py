@@ -1,6 +1,6 @@
-PAGES = [  # thanks claude!
+SCHEMA_PAGES = {  # thanks claude!
 
-    {"page": "appearance", "groups": [
+    "appearance": [
         {"title": "Blur", "items": [
             {"key": "blur", "type": "bool", "label": "Blur",
              "subtitle": "Pencerelerin saydam bölgelerine buzlu cam efekti uygular. Performans etkisi görecelidir, zayıf donanımda önerilmez.",
@@ -163,9 +163,9 @@ PAGES = [  # thanks claude!
              "subtitle": "En üstte sabit kalan (overlay) pencerenin kenarlık rengi.",
              "default": "0x14a57cff"},
         ]},
-    ]},
+    ],
 
-    {"page": "animations", "groups": [
+    "animations": [
         {"title": "Animasyonlar", "items": [
             {"key": "animations", "type": "bool", "label": "Animasyonlar",
              "subtitle": "Pencere açma/kapama/taşıma ve etiket geçiş animasyonlarını etkinleştirir.",
@@ -290,9 +290,9 @@ PAGES = [  # thanks claude!
              "subtitle": "Fade-out opaklık animasyonu için cubic-bezier eğrisi.",
              "default": "0.5,0.5,0.5,0.5"},
         ]},
-    ]},
+    ],
 
-    {"page": "layout", "groups": [
+    "layout": [
         {"title": "Scroller Düzeni", "items": [
             {"key": "scroller_structs", "type": "int", "label": "Kenar Boşluğu",
              "subtitle": "Pencere oranı 1 iken ekranın iki yanında bırakılan boşluk.",
@@ -352,9 +352,9 @@ PAGES = [  # thanks claude!
              "subtitle": "Stack'te tek pencere varken master'ı ortalar (yalnızca center_tile düzeninde).",
              "default": True},
         ]},
-    ]},
+    ],
 
-    {"page": "overview", "groups": [
+    "overview": [
         {"title": "Genel Görünüm (Overview)", "items": [
             {"key": "enable_hotarea", "type": "bool", "label": "Sıcak Bölgeyi Etkinleştir",
              "subtitle": "Fare ekranın sol alt köşesine geldiğinde overview modunu açar/kapatır.",
@@ -376,9 +376,9 @@ PAGES = [  # thanks claude!
              "subtitle": "Overview modunda ekran kenarındaki dış boşluk.",
              "min": 0, "max": 200, "step": 1, "default": 30},
         ]},
-    ]},
+    ],
 
-    {"page": "misc", "groups": [
+    "misc": [
         {"title": "Çeşitli Ayarlar", "items": [
             {"key": "xwayland_persistence", "type": "bool", "label": "XWayland Kalıcılığı",
              "subtitle": "XWayland oturumunun kalıcılığını etkinleştirir (etkinleştirmek için oturumu yeniden başlatın).",
@@ -502,9 +502,9 @@ PAGES = [  # thanks claude!
              "subtitle": "switch_layout komutuyla geçiş yapılacak düzenler, virgülle ayrılmış (örn. tile,grid,scroller). Boşsa tüm düzenler arasında geçiş yapılır.",
              "default": ""},
         ]},
-    ]},
+    ],
 
-    {"page": "keyboard", "groups": [
+    "keyboard": [
         {"title": "Klavye", "items": [
             {"key": "repeat_rate", "type": "int", "label": "Tekrar Hızı",
              "subtitle": "Tuş basılı tutulduğunda saniyedeki tekrar sayısı.",
@@ -540,9 +540,9 @@ PAGES = [  # thanks claude!
              "subtitle": "Ek klavye seçenekleri (örn. ctrl:nocaps, grp:lalt_lshift_toggle - düzenler arası geçiş tuşu).",
              "default": ""},
         ]},
-    ]},
+    ],
 
-    {"page": "mouse", "groups": [
+    "mouse": [
         {"title": "Touchpad ve Fare", "items": [
             {"key": "disable_trackpad", "type": "bool", "label": "Touchpad'i Devre Dışı Bırak",
              "subtitle": "Dahili touchpad'i tamamen devre dışı bırakır.",
@@ -628,5 +628,8 @@ PAGES = [  # thanks claude!
                  {"value": 1, "label": "Sol / Orta / Sağ"},
              ], "default": 0},
         ]},
-    ]},
-]
+    ],
+}
+
+def get_schema_page(page_id):
+    return SCHEMA_PAGES.get(page_id, [])

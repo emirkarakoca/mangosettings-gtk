@@ -10,9 +10,12 @@ class WallpaperService():
 
     def check_daemon(self):
         try:
-            subprocess.run(["awww", "query"])
-        except FileExistsError:
-            subprocess.Popen(["awww-daemon"])
+            subprocess.run(["awww", "query"],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+        except FileNotFoundError:
+            try:
+                subprocess.Popen(["awww-daemon"])
+            except FileNotFoundError:
+                pass
 
     def set_path(self,path):
         self.wallpaper_path = path
@@ -30,4 +33,7 @@ class WallpaperService():
 
     
     def change_wallpaper(self, wallpaper):
-        subprocess.run(["awww", "img", wallpaper])
+        try:
+            subprocess.run(["awww", "img", wallpaper])
+        except FileNotFoundError:
+            pass

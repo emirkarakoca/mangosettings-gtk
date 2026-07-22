@@ -4,13 +4,16 @@ gi.require_version("Adw", "1")
 from gi.repository import Gtk, Adw
 from ..services.audio_service import AudioService
 
-def build():
+def build(_):
     audio = AudioService()
     sinks = audio.get_sinks()
-    if not sinks:
-        return  #logger
-    
     page = Adw.PreferencesPage(title="Ses")
+    if not sinks:
+        group = Adw.PreferencesGroup(title="Çıkış")
+        row = Adw.ActionRow(title="Ses aygıtı bulunamadı",subtitle="Sistem ses servisi veya çıkış aygıtı kullanılamıyor.")
+        group.add(row)
+        page.add(group)
+        return page
     
     output = Adw.PreferencesGroup(title="Çıkış")
 

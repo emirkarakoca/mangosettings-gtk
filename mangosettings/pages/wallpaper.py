@@ -4,7 +4,7 @@ gi.require_version("Adw", "1")
 from gi.repository import Gtk, Adw, GLib
 from ..services.wallpaper_service import WallpaperService
 
-def build():
+def build(_):
     ws = WallpaperService()
     page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
     content = Adw.PreferencesPage(vexpand=True)

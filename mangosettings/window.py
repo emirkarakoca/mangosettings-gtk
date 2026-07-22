@@ -3,14 +3,13 @@ gi.require_version("Gtk","4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Gtk, Adw
 from .ui.sidebar import Sidebar
-from .pages.pages import build_page
-from .config.manager import ConfigManager
+from .pages.dispatcher import build_page
 
 
 class MangoWindow(Adw.ApplicationWindow):
-    def __init__(self, **kwargs):
+    def __init__(self, manager, **kwargs):
         super().__init__(**kwargs)
-        self.config = ConfigManager()
+        self.manager = manager
 
         self.set_title("Mango Settings")
         self.set_default_size(1600,900)
@@ -50,7 +49,7 @@ class MangoWindow(Adw.ApplicationWindow):
     
     def show_page(self, page_id):
         if page_id not in self.page_cache:
-            page = build_page(page_id)
+            page = build_page(page_id, self.manager)
             self.page_cache[page_id] = page
             print(self.page_cache)
             self.stack.add_named(page,page_id)
