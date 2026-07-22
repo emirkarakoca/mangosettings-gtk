@@ -9,7 +9,7 @@ def build():
     disk_info = info.get_disk()
     gpu_info = info.get_gpu()
 
-    page = Adw.PreferencesPage(title="Hakkında") #,,
+    page = Adw.PreferencesPage(title="Hakkında")
 
     device = Adw.PreferencesGroup(title="Cihaz")
     manufacturer = Adw.ActionRow(title="Üretici",subtitle=info.get_manufacturer())

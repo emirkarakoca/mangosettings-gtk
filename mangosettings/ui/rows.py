@@ -30,9 +30,8 @@ def create_combo(item,manager):
         model.append(option["label"])
     combo.set_model(model)
 
-    current = manager.get(item["key"])
-    if current is None:
-        current = item["default"]
+    current = manager.get(item["key"], item["default"])
+    
     selected = 0
 
     for index, option in enumerate(item["options"]):
@@ -76,7 +75,7 @@ def rgba_to_hex(rgba):
 
 def create_color(item, manager):
     row = Adw.ActionRow(title=item["label"], subtitle=item.get("subtitle", ""))
-    current = manager.get(item["key"])
+    current = manager.get(item["key"], item["default"])
     if current is None:
         current = item["default"]
 
@@ -94,7 +93,23 @@ def create_color(item, manager):
     row.add_suffix(button)
     return row
 
-ROW_BUILDERS = {"bool": create_switch, "int": create_spin, "float": create_spin, "choice": create_combo, "color": create_color}
+def create_text(item, manager):
+    row = Adw.ActionRow(title=item["label"],subtitle=item.get("subtitle", ""))
+    entry = Gtk.Entry()
+    entry.set_hexpand(True)
+
+    current = manager.get(item["key"], item["default"])
+    entry.set_text(str(current))
+
+    def changed(entry):
+        manager.set(item["key"], entry.get_text())
+    entry.connect("changed", changed)
+    row.add_suffix(entry)
+    row.set_activatable_widget(entry)
+
+    return row
+
+ROW_BUILDERS = {"bool": create_switch, "int": create_spin, "float": create_spin, "choice": create_combo, "color": create_color, "text": create_text}
 
 def create_row(item, manager):
     builder = ROW_BUILDERS.get(item["type"])

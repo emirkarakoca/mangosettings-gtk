@@ -10,7 +10,7 @@ manager = ConfigManager()
 
 def build():
     page = Adw.PreferencesPage()
-    page_data = next(p for p in PAGES if p["page"] == "appearance")
+    page_data = next(p for p in PAGES if p["page"] == "keyboard")
     for group_data in page_data["groups"]:
         group = Adw.PreferencesGroup(title=group_data["title"])
         for item in group_data["items"]:

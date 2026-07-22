@@ -41,8 +41,11 @@ class ConfigManager():
                 self.settings[key] = value
                 self.value_line_index[key] = index
     
-    def get(self, key):
-        return self.settings.get(key)
+    def get(self, key, default):
+        try:
+            return self.settings.get(key)
+        except:
+            return default
 
     def get_bool(self, key, default):
         b = self.settings.get(key)

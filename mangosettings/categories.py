@@ -1,3 +1,4 @@
+
 category_list = [ #id(ingilizce/türkçe olması için) / isim / ikon
     ("Sistem", [
         ("general", "Genel", "preferences-system-symbolic"),
@@ -16,11 +17,17 @@ category_list = [ #id(ingilizce/türkçe olması için) / isim / ikon
         ("wallpaper", "Duvar Kağıdı", "preferences-desktop-wallpaper-symbolic")
     ]),
     ("Pencere Yönetimi", [
+        ("layout", "Pencere Düzeni", "view-grid-symbolic"),
+        ("overview", "Genel Görünüm", "view-fullscreen-symbolic"),
         ("window-rules", "Pencere Kuralları", "preferences-other-symbolic"),
         ("layer-rules", "Layer Kuralları", "preferences-other-symbolic"),
         ("tag-rules", "Tag Kuralları", "preferences-other-symbolic")
+    ]),
+    ("Gelişmiş", [
+        ("misc", "Çeşitli Ayarlar", "applications-engineering-symbolic")
     ]),
     ("Bilgi", [
         ("about", "Hakkında", "info-outline-symbolic")
     ])
 ]
+ 
